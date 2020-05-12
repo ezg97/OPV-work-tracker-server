@@ -1,11 +1,23 @@
 const NotesService = {
-    getAllNotes(knex) {
-        return knex.select('*').from('noteful_notes')
+    getAllItems(knex) {
+        return knex.select('*').from('noteful_inventory')
     },
-    insertNote(knex, newNote) {
+    getAllPurchases(knex) {
+        return knex.select('*').from('noteful_purchases')
+    },
+    insertItem(knex, newItem) {
         return knex
-            .insert(newNote)
-            .into('noteful_notes')
+            .insert(newItem)
+            .into('noteful_inventory')
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
+    },
+    insertPurchase(knex, newPurchase) {
+        return knex
+            .insert(newPurchase)
+            .into('noteful_purchases')
             .returning('*')
             .then(rows => {
                 return rows[0]
@@ -14,8 +26,13 @@ const NotesService = {
     getById(knex, id) {
         return knex.from('noteful_notes').select('*').where('id', id).first()
     },
-    deleteNote(knex, id) {
-        return knex('noteful_notes')
+    deletePurchase(knex, id) {
+        return knex('noteful_purchases')
+            .where({ id })
+            .delete()
+    },
+    deleteItem(knex, id) {
+        return knex('noteful_inventory')
             .where({ id })
             .delete()
     },

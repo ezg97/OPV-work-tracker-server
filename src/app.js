@@ -17,6 +17,22 @@ app.use(morgan(morganOption))
 app.use(helmet())
 app.use(cors())
 
+app.use(function tableHeader(req, res, next){
+    //grab the table from the header
+    console.log( req.get('folderid'));
+    const folder = req.get('folderid');
+    console.log('folderrrrrr:', folder);
+    if (folder !== undefined) { 
+        app.set('folder', folder); }
+    else{
+        console.log('not saved to folderrrrr');
+    }
+    
+    
+        // move to the next middleware
+    next();
+  });
+
 app.get('/', (req, res) => {
     res.send('Hello, world!')
 })
@@ -35,4 +51,4 @@ app.use(function errorHandler(error, req, res, next) {
     res.status(500).json(response)
 })
 
-module.exports = app
+module.exports = app;
