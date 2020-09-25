@@ -5,6 +5,9 @@ const NotesService = {
     getAllPurchases(knex) {
         return knex.select('*').from('noteful_purchases')
     },
+    getAllProfiles(knex) {
+        return knex.select('*').from('noteful_profiles')
+    },
     insertItem(knex, newItem) {
         return knex
             .insert(newItem)
@@ -23,6 +26,15 @@ const NotesService = {
                 return rows[0]
             })
     },
+    insertProfile(knex, newProfile) {
+        return knex
+            .insert(newProfile)
+            .into('noteful_profiles')
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
+    },
     getById(knex, id) {
         return knex.from('noteful_notes').select('*').where('id', id).first()
     },
@@ -36,6 +48,11 @@ const NotesService = {
             .where({ id })
             .delete()
     },
+    deleteProfile(knex, id) {
+        return knex('noteful_profiles')
+            .where({ id })
+            .delete()
+    },
     updateInventory(knex, id, newNoteFields) {
         return knex('noteful_inventory')
             .where({ id })
@@ -43,6 +60,11 @@ const NotesService = {
     },
     updatePurchases(knex, id, newNoteFields) {
         return knex('noteful_purchases')
+            .where({ id })
+            .update(newNoteFields)
+    },
+    updateProfile(knex, id, newNoteFields) {
+        return knex('noteful_profiles')
             .where({ id })
             .update(newNoteFields)
     }

@@ -32,5 +32,6 @@ CREATE TABLE noteful_profiles (
     phone TEXT,
     membership BOOLEAN DEFAULT false,
     ER BOOLEAN DEFAULT false,
+    comment TEXT,
     modified TIMESTAMP DEFAULT now() NOT NULL
 );

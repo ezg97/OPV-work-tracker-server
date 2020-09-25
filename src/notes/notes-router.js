@@ -24,6 +24,20 @@ const serializePurchase = purchase => ({
     paymentStatus: purchase.payment_status,
 })
 
+const serializeProfile = profile => ({
+    id: profile.id,
+    folderid: profile.folderid,
+    name: xss(profile.cust_name),
+    content: xss(profile.comment),
+    email: xss(profile.email),
+    phone: xss(profile.phone),
+    membership: profile.membership,
+    er: profile.er,
+    modified: profile.modified,
+    comment: profile.comment,
+})
+//modified, email, phone, membership, er, comment:
+
 notesRouter
     .route('/inventory')
     .get((req, res, next) => {
@@ -100,6 +114,45 @@ notesRouter
                         .status(201)
                         .location(path.posix.join(req.originalUrl, `/${purchase.id}`))
                         .json(serializePurchase(purchase))
+                })
+                .catch(next)
+        
+        
+    })
+
+    notesRouter
+    .route('/profiles')
+    .get((req, res, next) => {
+        const knexInstance = req.app.get('db');
+        NotesService.getAllProfiles(knexInstance)
+        .then(profile => {
+            res.json(profile.map(serializeProfile));
+        })
+        .catch(next)
+    })
+    .post(jsonParser, (req, res, next) => {
+        const folderid = req.body.folderId;
+        const { name, modified, email, phone, membership, er, content } = req.body;
+        const newProfile = { cust_name: name, folderid, modified, email, phone, membership, er, comment: content  }
+
+            for (const [key, value] of Object.entries(newProfile)) {
+                if (value == null) {
+                    console.log(req.body)
+                    return res.status(400).json({
+                        error: { message: `Missing '${key}' in request body.`}
+                    })
+                }
+            }
+
+            NotesService.insertProfile(
+                req.app.get('db'),
+                newProfile
+            )
+                .then(profile => {
+                    res
+                        .status(201)
+                        .location(path.posix.join(req.originalUrl, `/${profile.id}`))
+                        .json(serializeProfile(profile))
                 })
                 .catch(next)
         
