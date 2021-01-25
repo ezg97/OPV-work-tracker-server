@@ -47,7 +47,7 @@ passport.use(
     new GoogleStrategy({
         //options for the google strategy
         callbackURL: '/auth/rggl/redirect',
-        failureRedirect: 'http://localhost:3000/', // see text
+        failureRedirect: 'https://opv.elijahguerrero97.vercel.app/', // see text
         clientID: keys.google.clientID,
         clientSecret: keys.google.clientSecret
     }, (accessToken, refreshToken, profile, done) => {

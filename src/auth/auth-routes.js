@@ -63,7 +63,7 @@ router.get('/loginpage', (req, res) => {
     ////console.log('in movint to login page');
     //only way I found to rewrite the url and redirect it from the servers url to the clients url
     console.log('this is prolly where its going down');
-    res.writeHead(301, {Location: 'http://localhost:3000/login'});
+    res.writeHead(301, {Location: 'https://opv.elijahguerrero97.vercel.app/login'});
 
     res.end();
 })
@@ -92,7 +92,7 @@ router.get('/login/google', (req, res, next) => {
 router.get('/google', passport.authenticate('google', {
     //this tells us what info we want from the user
     scope: ['profile', 'email'],
-    failureRedirect: 'http://localhost:3000/' // see text
+    failureRedirect: 'https://opv.elijahguerrero97.vercel.app/' // see text
 
 }));
 
@@ -115,7 +115,7 @@ router.get('/profile', authCheckLogin, (req,res) => {
     //console.log('in profile: ', req.user);
     console.log('trying to redirect to the home page');
      //only way I found to rewrite the url and redirect it from the servers url to the clients url
-     res.writeHead(301, {Location: 'http://localhost:3000/'});
+     res.writeHead(301, {Location: 'https://opv.elijahguerrero97.vercel.app/'});
      res.send();
     // if(req.user.user_id === false) res.send('Unauthorized User!');
     // else res.send('You are logged in as - ' + req.user.user_email);
