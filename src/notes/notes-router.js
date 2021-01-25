@@ -206,6 +206,16 @@ notesRouter
                 })
                 .catch(next)
             }    
+            else if(parseInt(data) === 3){
+                NotesService.deleteProfile(
+                    req.app.get('db'),
+                    req.params.note_id
+                )
+                .then(() => {
+                    res.status(204).end()
+                })
+                .catch(next)
+            }    
         })
         .patch(jsonParser, (req, res, next) => {
             console.log('welcome to patch');
@@ -220,9 +230,9 @@ notesRouter
                 })
             }
             console.log('what note to update?', noteToUpdate);
+            console.log(req.app.get('folder'));
 
-
-            if(noteToUpdate.cust_name === undefined) {
+            if (req.app.get('folder') == 1) {
                 NotesService.updateInventory(
                     req.app.get('db'),
                     req.params.note_id,
@@ -233,8 +243,19 @@ notesRouter
                 })
                 .catch(next)
             }
-            else {
+            else if (req.app.get('folder') == 2) {
                 NotesService.updatePurchases(
+                    req.app.get('db'),
+                    req.params.note_id,
+                    noteToUpdate
+                )
+                .then(numRowsAffected => {
+                    res.status(204).end()
+                })
+                .catch(next)
+            }
+            else if (req.app.get('folder') == 3){
+                NotesService.updateProfile(
                     req.app.get('db'),
                     req.params.note_id,
                     noteToUpdate

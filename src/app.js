@@ -7,20 +7,57 @@ const { NODE_ENV } = require('./config')
 const foldersRouter = require('./folders/folders-router')
 const notesRouter = require('./notes/notes-router');
 const emailRouter = require('./email/email-router');
+const authRoutes = require('./auth/auth-routes');
+
+const passportSetup = require('./config/passport-setup');
 
 
-const app = express()
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const keys = require('./config/keys');
+
+
+//  --- middleware ---
+const app = express();
+var bodyParser = require('body-parser');
+
+// app.set('trust proxy', 1); // trust first proxy
+
 
 const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
     : 'common';
 
 app.use(morgan(morganOption))
-app.use(helmet())
-app.use(cors())
+app.use(helmet());
+app.use(cors({
+    origin : 'http://localhost:3000',//localhost:3000 (Whatever your frontend url is) 
+    credentials: true, // <= Accept credentials (cookies) sent by the client
+  }));
+
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+
+  //makes sure the cookie is just a day long
+app.use(cookieSession({
+    maxAge: 24*60*60*1000,
+    keys: [keys.session.cookieKey],
+    // sameSite: 'None',
+    // sameSite: 'none',
+    httpOnly: true,
+    // secure: true,
+  }));
+  
+  //init passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+
 
 app.use(function tableHeader(req, res, next){
     //grab the table from the header
+    console.log('req: ',req.user);
     console.log( req.get('folderid'));
     const folder = req.get('folderid');
     console.log('folderrrrrr:', folder);
@@ -34,6 +71,10 @@ app.use(function tableHeader(req, res, next){
         // move to the next middleware
     next();
   });
+
+  console.log('bout to the auth routes');
+  app.use('/auth', authRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')

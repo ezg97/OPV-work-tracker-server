@@ -42,6 +42,10 @@ const serializeProfile = profile => ({
 emailRouter
 .route('/send')
 .post(jsonParser, (req, res, next) => {
+    console.log('attachments');
+    console.log(req);
+    console.log('2');
+    console.log(req.files);
     console.log('in send');
     console.log(req.body);
 
@@ -67,8 +71,8 @@ emailRouter
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'elijahguerrero97@gmail.com', // generated ethereal user
-            pass: 'theLordismyshield97', // generated ethereal password
+            user: 'oilsporvida@gmail.com', // generated ethereal user
+            pass: 'Ilovemy4kids*', // generated ethereal password
           },
       
     });
@@ -76,11 +80,12 @@ emailRouter
 
     
     transporter.sendMail({
-        from: 'elijahguerrero97@gmail.com',
-        to: 'Oils Por Vida Subscribers <elijahguerrero97@gmail.com>',
+        from: 'oilsporvida@gmail.com',
+        to: 'Oils Por Vida Subscribers <oilsporvida@gmail.com>',
         bcc: req.body.to,
         subject: req.body.subject,
-        html: req.body.message
+        html: req.body.message,
+        attachments: req.body.attachments? req.body.attachments[0]: null,
     }, (err, info) => {
         console.log('email sent or was there an error?');
         if (err) {
