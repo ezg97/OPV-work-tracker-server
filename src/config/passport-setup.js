@@ -6,11 +6,11 @@ const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('./keys');
 const UserService = require('./passport-setup-service');
 const knex = require('knex');
-const { DB_URL } = require('../config');
+const { DATABASE_URL } = require('../config');
 
 const db = knex({
     client: 'pg',
-    connection: DB_URL,
+    connection: DATABASE_URL,
   });
 
 //Serialize the user id
