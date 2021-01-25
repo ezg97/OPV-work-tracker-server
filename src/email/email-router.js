@@ -71,8 +71,8 @@ emailRouter
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user:  req.body.from, // generated ethereal user
-            pass: 'xxxxxxxx', // generated ethereal password
+            user: 'oilsporvida@gmail.com', // generated ethereal user
+            pass: 'Ilovemy4kids*', // generated ethereal password
           },
       
     });
@@ -80,8 +80,8 @@ emailRouter
 
     
     transporter.sendMail({
-        from: req.body.from,
-        to: req.body.from,
+        from: 'oilsporvida@gmail.com',
+        to: 'Oils Por Vida Subscribers <oilsporvida@gmail.com>',
         bcc: req.body.to,
         subject: req.body.subject,
         html: req.body.message,
